@@ -1,14 +1,7 @@
 package com.cice.db;
-
-import sun.misc.Cache;
-
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Clase encargada de generar el acceso y uso de una base de datos.
@@ -113,8 +106,8 @@ public class Manager {
         conectaBaseDatos();
         try {
             statement = connection.createStatement();
-            int devolucion = statement.executeUpdate(sql);
-            if(devolucion !=0) {
+            int devo = statement.executeUpdate(sql);
+            if(devo !=0) {
                 bandera = true;
             }
 

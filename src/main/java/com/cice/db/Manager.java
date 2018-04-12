@@ -1,7 +1,13 @@
 package com.cice.db;
 
+import sun.misc.Cache;
+
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 import java.sql.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Clase encargada de generar el acceso y uso de una base de datos.
@@ -77,20 +83,29 @@ public class Manager {
         }
         return esDesconectado;
     }
-    private void ejecutarSelect (String sql){
+    public CachedRowSet ejecutarSelect (String sql){
+        CachedRowSet resultado = null;
+        ResultSet resultSet = null;
         conectaBaseDatos();
         try {
-            ResultSet resultado = statement.executeQuery(sql);
-            while (resultado.next()){
-                int numeroColumnas = resultado.getMetaData().getColumnCount();
-                for(int i = 0; i< numeroColumnas; i++){
-                    String dato = resultado.getString(i);
-                }
-            }
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            resultado = RowSetProvider.newFactory().createCachedRowSet();
+            resultado.populate(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                statement.close();
+                resultSet.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
         desconectarBaseDatos();
-
+        return resultado;
     }
+
+
+
 }

@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Clase encargada de generar el acceso y uso de una base de datos.
@@ -106,6 +107,31 @@ public class Manager {
         return resultado;
     }
 
+    public boolean executeQuery(String sql){
+        boolean bandera = false;
+        ResultSet resultSet = null;
+        conectaBaseDatos();
+        try {
+            statement = connection.createStatement();
+            int devolucion = statement.executeUpdate(sql);
+            if(devolucion !=0) {
+                bandera = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                statement.close();
+                resultSet.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        desconectarBaseDatos();
+        return bandera;
+
+    }
 
 
 }
